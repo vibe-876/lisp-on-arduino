@@ -1,0 +1,48 @@
+:PROPERTIES:
+:header-args: :session lisp-on-arduino :tangle lisp-on-arduino.ino
+:END:
+#+title: Main File
+#+author: Camilla A.
+
+
+* Atoms
+We start with atomic variables.
+These are the things that we construct our lists out of.
+#+begin_src arduino
+  struct atom {
+  	void *data;
+  }
+#+end_src
+
+And now, a function to initialise and write something to it.
+#+begin_src arduino
+  int atom_init(struct atom *atom) {
+  	atom = malloc(sizeof(struct atom));
+  }
+
+  int atom_write(int data, struct atom *atom) {
+  	atom->data = malloc(sizeof(int));
+  	atom->*data = data;
+
+  	return(0);
+  }
+#+end_src
+
+And a function to read an atom.
+#+begin_src arduino
+  int atom_read(struct atom *atom) {
+  	if(atom == NULL) return(-1);
+  	
+  	Serial.println(atom->data);
+  	return(0);
+  }
+#+end_src
+
+And finally, a function to garbage collect an atom.
+#+begin_src arduino
+  int atom_gc(struct atom *atom) {
+  	if(atom == 0x0) return(-1);
+  	free(atom);
+  	return(0);
+  }
+#+end_src

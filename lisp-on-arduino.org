@@ -10,7 +10,7 @@ We start with atomic variables.
 These are the things that we construct our lists out of.
 #+begin_src arduino
   struct atom {
-  	void *data;
+  	int *data;
   }
 #+end_src
 
@@ -61,7 +61,23 @@ We then implement ~car~ and ~cdr~.
   	return(list->car);
   }
 
-  struct atom cdr(struct cons list) {
+  struct cons cdr(struct cons list) {
   	return(list->cdr);
+  }
+#+end_src
+
+And we want an append function, so that we can add to our lists.
+#+begin_src arduino
+  struct cons append(struct cons *list, int data) {
+  	struct cons *pointer = list;
+  	if(pointer == 0x0) {
+  		pointer = malloc(sizeof(struct cons));
+  		pointer->cdr = 0x0;
+  	}
+
+  	while(pointer->cdr != 0x0) pointer = list->next;
+  	pointer->car = data;
+
+  	return(list);
   }
 #+end_src

@@ -1,5 +1,5 @@
 struct atom {
-	void *data;
+	int *data;
 }
 
 int atom_init(struct atom *atom) {
@@ -35,6 +35,19 @@ struct atom car(struct cons list) {
 	return(list->car);
 }
 
-struct atom cdr(struct cons list) {
+struct cons cdr(struct cons list) {
 	return(list->cdr);
+}
+
+struct cons append(struct cons *list, int data) {
+	struct cons *pointer = list;
+	if(pointer == 0x0) {
+		pointer = malloc(sizeof(struct cons));
+		pointer->cdr = 0x0;
+	}
+
+	while(pointer->cdr != 0x0) pointer = list->next;
+	pointer->car = data;
+
+	return(list);
 }

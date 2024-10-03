@@ -25,3 +25,16 @@ int atom_gc(struct atom *atom) {
 	free(atom);
 	return(0);
 }
+
+struct cons {
+	struct atom *car;
+	struct cons *cdr;
+};
+
+struct atom car(struct cons list) {
+	return(list->car);
+}
+
+struct atom cdr(struct cons list) {
+	return(list->cdr);
+}

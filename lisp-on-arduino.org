@@ -46,3 +46,22 @@ And finally, a function to garbage collect an atom.
   	return(0);
   }
 #+end_src
+* Cons
+Cons cells are another easy thing to implement.
+#+begin_src arduino
+  struct cons {
+  	struct atom *car;
+  	struct cons *cdr;
+  };
+#+end_src
+
+We then implement ~car~ and ~cdr~.
+#+begin_src arduino
+  struct atom car(struct cons list) {
+  	return(list->car);
+  }
+
+  struct atom cdr(struct cons list) {
+  	return(list->cdr);
+  }
+#+end_src

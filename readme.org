@@ -1,0 +1,8 @@
+#+title: Running Lisp on an Arduino
+#+author: Camilla A.
+
+
+* Why
+To be honest, I can't figure out how to get ulisp to compile properly, and I also want to try writing my own lisp, so I'm doing this.
+
+My university wants me to use an arduino for a module, and I don't want to use C++, so this is my solution.

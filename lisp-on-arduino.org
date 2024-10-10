@@ -18,7 +18,7 @@ Support for literals will be added at a later date.
 #+end_src
 
 Next, we use this to define an atom as a struct.
-#+begin_src arduino
+#+begin_src cpp
   typedef struct atom_struct {
   	signed int data;
   	enum atom_enum atom_type;
@@ -28,7 +28,7 @@ Next, we use this to define an atom as a struct.
 #+end_src
 
 And now, a function to initialise and write something to it, and a function to create a nil value.
-#+begin_src arduino
+#+begin_src cpp
   atom *atom_nil() {
   	atom *new_atom = malloc(ATOM_SIZE);
   	new_atom->atom_type = nil;
@@ -46,7 +46,7 @@ And now, a function to initialise and write something to it, and a function to c
 #+end_src
 * Cons
 Cons cells are another easy thing to implement.
-#+begin_src arduino
+#+begin_src cpp
     typedef struct cons_struct {
     	atom *car;
     	struct cons_struct *cdr;
@@ -56,7 +56,7 @@ Cons cells are another easy thing to implement.
 #+end_src
 
 We then implement ~car~ and ~cdr~.
-#+begin_src arduino
+#+begin_src cpp
   atom *car(struct cons_struct *list) {
   	return(list->car);
   }
@@ -67,7 +67,7 @@ We then implement ~car~ and ~cdr~.
 #+end_src
 
 Next, we need a ~pair~ procedure, to make cons cells.
-#+begin_src arduino
+#+begin_src cpp
   cons *pair(int data_one, int data_two) {
   	atom *atom_one = atom_new(data_one);
   	atom *atom_two = atom_new(data_two);
@@ -78,7 +78,7 @@ Next, we need a ~pair~ procedure, to make cons cells.
 #+end_src
 
 And we want an append function, so that we can add to our lists.
-#+begin_src arduino
+#+begin_src cpp
   cons *append(cons *list, unsigned int data) {
   	cons *last_elem = list;
   	while(last_elem != 0x0) last_elem = last_elem->cdr;
@@ -92,14 +92,14 @@ And we want an append function, so that we can add to our lists.
 #+end_src
 * REPL
 Just here so that we can compile (for now).
-#+begin_src arduino
+#+begin_src cpp
   void setup() {
   	Serial.begin(9600);
   }
 #+end_src
 
 Here is where the REPL lives.
-#+begin_src arduino
+#+begin_src cpp
   void loop() {
   	Serial.print("REPL> ");
   }

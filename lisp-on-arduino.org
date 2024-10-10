@@ -8,10 +8,12 @@
 * Atoms
 We start with atomic variables.
 These are the things that we construct our lists out of -- it can just be either data, or nil.
-#+begin_src arduino
+Support for literals will be added at a later date.
+#+begin_src cpp
   enum atom_enum {
   	nil,
-  	data
+  	number,
+  	literal
   };
 #+end_src
 
@@ -19,82 +21,86 @@ Next, we use this to define an atom as a struct.
 #+begin_src arduino
   typedef struct atom_struct {
   	signed int data;
-  	enum atom_enum;
+  	enum atom_enum atom_type;
   } atom;
+
+  #define ATOM_SIZE sizeof(atom)
 #+end_src
 
 And now, a function to initialise and write something to it, and a function to create a nil value.
 #+begin_src arduino
-  atom *atom_nil()
-  { atom *new_atom = malloc(ATOM_SIZE);
-  	new_atom->atom_enum = nil;
-  	return(new_atom); }
+  atom *atom_nil() {
+  	atom *new_atom = malloc(ATOM_SIZE);
+  	new_atom->atom_type = nil;
+  	
+  	return(new_atom);
+  }
 
-  atom *atom_write(signed int data, atom *atom)
-  { atom->atom_enum = data;
+  atom *atom_new(signed int data) {
+  	atom *atom = malloc(ATOM_SIZE);
+  	atom->atom_type = data;
   	atom->data = data;
-  	return(atom); }
+  	
+  	return(atom);
+  }
 #+end_src
 * Cons
 Cons cells are another easy thing to implement.
 #+begin_src arduino
-  struct cons {
-  	atom *car;
-  	cons *cdr;
-  };
+    typedef struct cons_struct {
+    	atom *car;
+    	struct cons_struct *cdr;
+    } cons;
+
+    #define CONS_SIZE sizeof(cons)
 #+end_src
 
 We then implement ~car~ and ~cdr~.
 #+begin_src arduino
-  atom *car(struct cons *list) {
+  atom *car(struct cons_struct *list) {
   	return(list->car);
   }
 
-  struct cons *cdr(struct cons *list) {
+  cons *cdr(cons *list) {
   	return(list->cdr);
+  }
+#+end_src
+
+Next, we need a ~pair~ procedure, to make cons cells.
+#+begin_src arduino
+  cons *pair(int data_one, int data_two) {
+  	atom *atom_one = atom_new(data_one);
+  	atom *atom_two = atom_new(data_two);
+
+  	cons *cons;
+  	return(cons);
   }
 #+end_src
 
 And we want an append function, so that we can add to our lists.
 #+begin_src arduino
-  struct cons *append(struct cons *list, int data) {
-  	struct cons *pointer = list;
-  	if(pointer == 0x0) {
-  		pointer = malloc(sizeof(struct cons));
-  		pointer->cdr = 0x0;
-  	}
+  cons *append(cons *list, unsigned int data) {
+  	cons *last_elem = list;
+  	while(last_elem != 0x0) last_elem = last_elem->cdr;
 
-  	while(pointer->cdr != 0x0) pointer = list->cdr;
-  	pointer->car = data;
+  	last_elem = malloc(CONS_SIZE);
+  	last_elem->car = atom_new(data);
+  	last_elem->cdr = atom_nil();
 
-  	return(list);
+  	return(0x0);
   }
 #+end_src
-* Equalities
-So we want to know if two things are equal or not.
-First, we need a way to compare if two atoms are equal.
+* REPL
+Just here so that we can compile (for now).
 #+begin_src arduino
-  int atom_equal(atom *atom_one, atom *atom_two) {
-  	if(atom_one->data == atom_two->data) return(0);
-  	return(-1);
+  void setup() {
+  	Serial.begin(9600);
   }
 #+end_src
 
-And we also need to be able to check if two different lists are equal.
+Here is where the REPL lives.
 #+begin_src arduino
-  /* int list_equal(struct cons *list_one, struct cons *list_two) { */
-  /* 	struct cons *cdr_left = list_one; */
-  /* 	struct cons *cdr_right = list_two; */
-  /* 	while(cdr_left->next != 0x0 && cdr_right->next != 0x0) { */
-  /* 		if(cdr_left->car->data != cdr_right->car->data) return(-1); */
-
-  /* 		cdr_left = cdr_left->cdr; */
-  /* 		cdr_right = cdr_right->cdr; */
-  /* 	} */
-  /* } */
-#+end_src
-* Loop and Main
-#+begin_src arduino
-  void setup() {}
-  void loop() {}
+  void loop() {
+  	Serial.print("REPL> ");
+  }
 #+end_src
